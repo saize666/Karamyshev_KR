@@ -1,0 +1,8 @@
+{% extends 'monitor/base.html' %}
+{% block title %}Требования · VDAG{% endblock %}
+{% block crumb %}Требования{% endblock %}
+{% block content %}
+<div class="eyebrow">АРХИТЕКТУРА ЗАЩИТЫ</div><h1>Требования VDAG</h1><p class="lead">Пять обязательных требований к контролю доступа, принятых в проекте паттерна</p>
+<div class="panel pad"><div class="req-list"><div class="req"><span class="req-id">R1</span><div><h3>Запрет прямых подключений</h3><p>VNC и serial0 доступны только через локальные UNIX-сокеты. TCP 5901 и 7001 не должны быть опубликованы в физическую сеть.</p></div></div><div class="req"><span class="req-id">R2</span><div><h3>Идентификация и проверка полномочий</h3><p>OIDC, MFA, проверка роли пользователя, виртуальной машины, устройства и разрешённого времени работ.</p></div></div><div class="req"><span class="req-id">R3</span><div><h3>Безопасное открытие сеанса</h3><p>Одноразовый билет действует 60 секунд; Gateway обращается только к устройствам из доверенного реестра.</p></div></div><div class="req"><span class="req-id">R4</span><div><h3>Ограничение и отзыв доступа</h3><p>Сеанс — не более 15 минут; повторная проверка прав каждые 30 секунд. При отзыве разрешения соединение закрывается.</p></div></div><div class="req"><span class="req-id">R5</span><div><h3>Аудит и безопасный отказ</h3><p>События ALLOW / DENY / CLOSE записываются в журнал. Если невозможно подтвердить права, новые подключения запрещены.</p></div></div></div></div>
+<div class="info-strip"><span class="info-symbol">i</span><span>Представленная веб-панель демонстрирует сбор и отображение событий, а не осуществляет доступ к настоящим устройствам KVM/QEMU.</span></div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'monitor/base.html' %}
+{% block title %}Панель событий · VDAG{% endblock %}
+{% block crumb %}Панель событий{% endblock %}
+{% block content %}
+<div class="heading-row"><div><div class="eyebrow">КОНТРОЛЬ ДОСТУПА К ВИРТУАЛЬНЫМ УСТРОЙСТВАМ</div><h1>Панель мониторинга</h1><p class="lead">События авторизации и работы консольных каналов виртуальных машин</p></div><span class="demo-label">◆ ДЕМОНСТРАЦИОННЫЕ ДАННЫЕ</span></div>
+<div class="cards">
+ <div class="metric"><div class="metric-name">Всего событий <span>↗</span></div><div class="metric-num">{{ counts.total }}</div><div class="metric-foot">За период наблюдения</div></div>
+ <div class="metric green"><div class="metric-name">Разрешено <span>✓</span></div><div class="metric-num">{{ counts.allowed }}</div><div class="metric-foot">Решений ALLOW</div></div>
+ <div class="metric red"><div class="metric-name">Отклонено <span>✕</span></div><div class="metric-num">{{ counts.denied }}</div><div class="metric-foot">Решений DENY</div></div>
+ <div class="metric gold"><div class="metric-name">Закрыто <span>⏱</span></div><div class="metric-num">{{ counts.closed }}</div><div class="metric-foot">Завершённых сеансов</div></div>
+</div>
+<div class="panel"><div class="panel-header"><div><h2>Журнал доступа</h2><p>Последние 25 событий, с возможностью фильтрации</p></div><span class="panel-counter">VDAG / AUDIT</span></div>
+<form class="filters" method="get" action="{% url 'monitor:dashboard' %}"><label>Решение <select name="decision"><option value="ALL" {% if selection == 'ALL' %}selected{% endif %}>Все решения</option><option value="ALLOW" {% if selection == 'ALLOW' %}selected{% endif %}>Разрешено</option><option value="DENY" {% if selection == 'DENY' %}selected{% endif %}>Запрещено</option><option value="CLOSE" {% if selection == 'CLOSE' %}selected{% endif %}>Закрыто</option></select></label><label>Виртуальная машина <select name="vm"><option value="ALL" {% if vm_selection == 'ALL' %}selected{% endif %}>Все ВМ</option><option value="pay-01" {% if vm_selection == 'pay-01' %}selected{% endif %}>pay-01</option><option value="test-01" {% if vm_selection == 'test-01' %}selected{% endif %}>test-01</option></select></label><button class="btn" type="submit">Применить фильтр →</button><a class="reset" href="{% url 'monitor:dashboard' %}">Сбросить</a></form>
+<div class="table-scroll"><table><thead><tr><th>Дата и время</th><th>Пользователь / IP</th><th>ВМ</th><th>Устройство</th><th>Решение</th><th>Причина</th></tr></thead><tbody>{% for event in events %}<tr><td class="mono">{{ event.created_at|date:'d.m.Y H:i:s' }}</td><td><strong>{{ event.username }}</strong><small class="subrow mono">{{ event.ip_address }}</small></td><td><span class="vm">{{ event.vm_name }}</span></td><td class="mono">{{ event.device }}</td><td>{% if event.decision == 'ALLOW' %}<span class="tag allow">● ALLOW</span>{% elif event.decision == 'DENY' %}<span class="tag deny">● DENY</span>{% else %}<span class="tag close">● CLOSE</span>{% endif %}</td><td>{{ event.reason }}</td></tr>{% empty %}<tr><td colspan="6" class="empty">По выбранным фильтрам событий нет.</td></tr>{% endfor %}</tbody></table></div>
+</div>
+<div class="info-strip"><span class="info-symbol">i</span><span>Это учебная модель интерфейса VDAG. Записи созданы генератором тестовых данных и не являются результатами реального внедрения.</span></div>
+{% endblock %}
